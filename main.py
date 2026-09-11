@@ -160,3 +160,5 @@ def main():
 
         else:
             print("Invalid choice. Enter 1, 2, 3, 4 or 5.")
+
+main()
