@@ -1,0 +1,40 @@
+Generated using the built-in image_gen tool.
+
+Use case: infographic-diagram.
+Create a polished, exceptionally legible educational roadmap image for a beginner's local Python project. Portrait poster, high resolution. Title: "AI PROMPT LAB". Subtitle: "8 phases • One growing Python project". Use clean light background, dark navy typography, restrained blue/teal accents, generous spacing and simple icons. Eight numbered horizontal cards vertically stacked, connected by unambiguous downward arrows 1 to 8. Each card has a bold phase name, a BUILD line and a PRACTICE line. Phase 1 highlighted with badge "YOU ARE HERE". All other phases are planned, not completed. Prioritize accurate readable text over decorative art. No code screenshots or extra phases.
+
+Exact content for cards (wrap text as needed):
+1. Basic CLI
+BUILD: Add/view prompts • Mock answers • History • Save/load JSON
+PRACTICE: Variables, collections, loops, conditions, functions, files
+
+2. Data models and OOP
+BUILD: Prompt and result objects
+PRACTICE: Classes, self, instance attributes, dataclasses, properties, @classmethod, @staticmethod, dunder methods
+
+3. Provider architecture
+BUILD: Interchangeable model providers
+PRACTICE: Inheritance, super(), overriding, polymorphism, composition, modules, packages
+
+4. Reliable storage
+BUILD: Robust JSON storage • Missing/damaged file handling
+PRACTICE: pathlib, context managers, exceptions, safer writes, generators for line-based history
+
+5. Real AI API
+BUILD: Real model responses • Keep the mock available
+PRACTICE: HTTP, requests, JSON responses, timeouts, environment variables, .env, virtual environments
+
+6. Errors, logs, and timing
+BUILD: Diagnose failures • Measure response latency
+PRACTICE: Custom exceptions, exception chaining, logging, decorators, closures, *args, **kwargs
+
+7. Concurrent execution
+BUILD: Run multiple prompts concurrently
+PRACTICE: Coroutines, async/await, asyncio.gather(), tasks, I/O-bound work
+
+8. Compare, test, and polish
+BUILD: Compare results • Test behavior • Refine code • Document setup
+PRACTICE: Comprehensions, sorting, sets, tuples, type hints, testing, refactoring
+
+Footer separate mini workflow: "APP FLOW: Prompt → Mock / AI provider → Answer → Saved result → History & comparison"
+Small footer note: "Build → Test → Explain → Revisit".
