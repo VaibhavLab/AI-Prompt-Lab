@@ -6,10 +6,9 @@ prompts = [] # List of the promptss , prompt
 
 class prompt:
     def __init__(self, prompt_id , text, response ):
-        
+        pass
 
-
-
+             
 
 def mock_response(prompt_text):
     return f"Mock answer for: {prompt_text}"
