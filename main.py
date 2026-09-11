@@ -1,95 +1,162 @@
 import json
 
-prompt = {} # dict of prompt with number 
-prompts = [] # List of the promptss , prompt 
 
+prompts = []
+responses = []
 
-class prompt:
-    def __init__(self, prompt_id , text, response ):
-        pass
-
-             
 
 def mock_response(prompt_text):
     return f"Mock answer for: {prompt_text}"
 
 
-def give_response(prompt_text):
-    return mock_response(prompt_text)
-    
+def add_prompt():
+    prompt_text = input("Enter your prompt: ").strip()
 
-def save_data(prompts):
+    if not prompt_text:
+        print("Prompt cannot be empty.")
+        return
+
+    prompt = {
+        "id": len(prompts) + 1,
+        "text": prompt_text
+    }
+
+    prompts.append(prompt)
+
+    print("Prompt added.")
+
+
+def view_prompts():
+    if not prompts:
+        print("No prompts yet.")
+        return
+
+    for prompt in prompts:
+        print(f"{prompt['id']}. {prompt['text']}")
+
+
+def find_prompt_by_id(prompt_id):
+    for prompt in prompts:
+        if prompt["id"] == prompt_id:
+            return prompt
+
+    return None
+
+
+def run_prompt():
+    try:
+        prompt_id = int(input("Enter prompt ID: ").strip())
+    except ValueError:
+        print("Prompt ID must be a number.")
+        return
+
+    prompt = find_prompt_by_id(prompt_id)
+
+    if prompt is None:
+        print("Prompt not found.")
+        return
+
+    response_text = mock_response(prompt["text"])
+
+    response = {
+        "id": len(responses) + 1,
+        "prompt_id": prompt["id"],
+        "response": response_text
+    }
+
+    responses.append(response)
+
+    print("Response:")
+    print(response_text)
+
+
+def view_history():
+    if not responses:
+        print("No response history yet.")
+        return
+
+    for response in responses:
+        prompt = find_prompt_by_id(response["prompt_id"])
+
+        if prompt is not None:
+            print(
+                f"\nRun ID: {response['id']}"
+                f"\nPrompt ID: {prompt['id']}"
+                f"\nPrompt: {prompt['text']}"
+                f"\nResponse: {response['response']}"
+            )
+def delete_prompt():
+    pass 
+
+def save_data():
     data = {
-        "prompts" : prompts,
-        }
-    
+        "prompts": prompts,
+        "responses": responses
+    }
+
     with open("data.json", "w", encoding="utf-8") as file:
         json.dump(data, file, indent=4)
 
-def load_data():# Load data ------------------------------>
+
+def load_data():
     try:
-        with open("data.json" , "r" , encoding = "utf-8") as file :
+        with open("data.json", "r", encoding="utf-8") as file:
             data = json.load(file)
+
     except FileNotFoundError:
-        return {"prompts" : []}
+        return {
+            "prompts": [],
+            "responses": []
+        }
+
+    except json.JSONDecodeError:
+        print("data.json is damaged or contains invalid JSON.")
+
+        return {
+            "prompts": [],
+            "responses": []
+        }
 
     return data
 
-data = load_data()
-prompts = data["prompts"]
 
+def main():
+    global prompts
+    global responses
 
-while True:
-    print("\nAI Prompt Lab")
-    print("1. Add prompt")
-    print("2. View prompts")
-    
-    print("3. Get prompt response ")
-    print("4. Exit")
+    data = load_data()
 
-    choice = input("Choose an option: ").strip()
+    prompts = data["prompts"]
+    responses = data["responses"]
 
-    if choice == "1":
-        prompt_text = input("Enter your prompt: ").strip()
+    while True:
+        print("\nAI Prompt Lab")
+        print("1. Add prompt")
+        print("2. View prompts")
+        print("3. Run prompt")
+        print("4. View response history")
+        print("5. Exit")
 
-        if prompt_text:
-            prompt = {
-                "id" : len(prompts) + 1,
-                "text": prompt_text , 
-                "Response" : give_response(prompt_text)
-            }
-            
-            prompts.append(prompt)
-            print("Your response : " , prompt["Response"])
-            print("Prompt added.")
+        choice = input("Choose an option: ").strip()
+
+        if choice == "1":
+            add_prompt()
+            save_data()
+
+        elif choice == "2":
+            view_prompts()
+
+        elif choice == "3":
+            run_prompt()
+            save_data()
+
+        elif choice == "4":
+            view_history()
+
+        elif choice == "5":
+            save_data()
+            print("Goodbye!")
+            break
+
         else:
-            print("Prompt cannot be empty.")
-
-    elif choice == "2":
-        if prompts:
-            for prompt in prompts:
-                print(f"{prompt['id']}. {prompt['text']} Response :  {prompt["Response"]}")
-        else:
-            print("No prompts yet.")
-        
-    elif choice == "3":
-        entered_prompt = input("Enter your prompt : ").strip()
-        found = False
-
-        for pro in prompts :
-            if pro["text"] == entered_prompt:
-                print(f" Your response : {pro["Response"]}")
-                found = True
-                break
-
-        if not found:
-            print("Enter the correct prompt")
-        
-
-    elif choice == "4":
-        save_data(prompts)
-        print("Goodbye!")
-        break
-
-    else:
-        print("Invalid choice. Please enter 1, 2, 3 or 4.")
+            print("Invalid choice. Enter 1, 2, 3, 4 or 5.")
