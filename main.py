@@ -85,6 +85,31 @@ def view_history():
                 f"\nPrompt: {prompt['text']}"
                 f"\nResponse: {response['response']}"
             )
+
+class RunResult:
+    def __init__(self , prompt_id , run_id , response):
+        self.prompt_id = prompt_id
+        self.response = response
+        self.run_id = run_id
+
+    def to_dict(self):
+        return{
+            "id" : self.prompt_id,
+            "response" : self.response,
+            "run_id" : self.run_id
+        }
+
+class Prompt:
+    def __init__(self, prompt_id , text):
+        self.id = prompt_id
+        self.text = text 
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "text" : self.text
+        }
+
 def delete_prompt():
     pass 
 
