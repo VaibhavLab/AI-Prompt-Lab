@@ -10,6 +10,8 @@ def mock_response(prompt_text):
 
 
 def add_prompt():
+    # obhject of the class prompt 
+    
     prompt_text = input("Enter your prompt: ").strip()
 
     if not prompt_text:
@@ -94,9 +96,9 @@ class RunResult:
 
     def to_dict(self):
         return{
-            "id" : self.prompt_id,
+            "prompt_id" : self.prompt_id,
             "response" : self.response,
-            "run_id" : self.run_id
+            "id" : self.run_id
         }
 
 class Prompt:
@@ -109,6 +111,8 @@ class Prompt:
             "id": self.id,
             "text" : self.text
         }
+
+        
 
 def delete_prompt():
     pass 
