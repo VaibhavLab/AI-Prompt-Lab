@@ -1,5 +1,5 @@
 import json
-
+from dataclasses import dataclass
 
 prompts = [] # The list of all the prompts which is in dict 
 # ---------------But but but now this is storing object after the little change 
@@ -15,12 +15,13 @@ def add_prompt():
     
     prompt_text = input("Enter your prompt: ").strip()
 
-    if not prompt_text:
-        print("Prompt cannot be empty.")
+    try:
+        # Calling class Prompt to add the prompt , we created the object name as "prompt" calling the class Prompt
+        prompt = Prompt(prompt_id=len(prompts) + 1, text=prompt_text)
+        
+    except ValueError as e:
+        print(e)
         return
-
-    # Calling class Prompt to add the prompt , we created the object name as "prompt" calling the class Prompt
-    prompt = Prompt(prompt_id=len(prompts) + 1, text=prompt_text)
 
     prompts.append(prompt) # also append that object to the list of objects "prompt"
 
@@ -35,7 +36,7 @@ def view_prompts():
     # viewering prompt from prompts list we have created containg objects 
     # finding each object 
     for prompt in prompts:
-        print(f"{prompt.id}. {prompt.text}")
+        print(f"{prompt.id}. {prompt.text} ({prompt.word_count} words)")
 
 
 def find_prompt_by_id(prompt_id):
@@ -87,14 +88,13 @@ def view_history():
                 f"\nRun ID: {response.run_id}"
                 f"\nPrompt ID: {prompt.id}"
                 f"\nPrompt: {prompt.text}"
-                f"\nResponse: {response.response_text}"
+                f"\nResponse: {response.response}"
             )
-
+@dataclass # simplty for practise
 class RunResult:
-    def __init__(self , prompt_id , run_id , response):
-        self.prompt_id = prompt_id
-        self.response = response
-        self.run_id = run_id
+    prompt_id: int
+    run_id: int
+    response: str
 
     def to_dict(self):
         return{
@@ -102,7 +102,8 @@ class RunResult:
             "response" : self.response,
             "id" : self.run_id
         }
-    @classmethod
+    @classmethod # to tell the class it is it's method which helps to run __init__ when called 
+    # converting dict to class objects 
     def from_dict(cls, data):
         return cls(
             prompt_id = data["prompt_id"],
@@ -110,10 +111,30 @@ class RunResult:
             response = data["response"]
         )
     
+
+
 class Prompt:
     def __init__(self, prompt_id , text):
         self.id = prompt_id
-        self.text = text 
+        # Assignment calls the text setter below, including during initialization.
+        self.text = text
+
+    @property
+    def text(self):
+        # Reading p.text calls this getter; self refers to the object p.
+        return self._text
+
+    @text.setter
+    def text(self, value):
+        # Assigning p.text = "Hello" passes p as self and "Hello" as value.
+        # Validate before storing, so a rejected edit preserves the previous text.
+        value = value.strip()
+        if not value:
+            raise ValueError("Prompt cannot be empty")
+
+        # _text is internal storage by convention, not enforced privacy.
+        # Using self.text here would call this setter again recursively.
+        self._text = value
 
     def to_dict(self):
         return {
@@ -126,16 +147,17 @@ class Prompt:
             prompt_id = data["id"],
             text = data["text"]
         )
+    @property
+    def word_count(self):
+        return len(self.text.split())
 
-        
-
-def delete_prompt():
-    pass 
+    def __repr__(self):
+        return f"{self.id}. {self.text}"
 
 def save_data():
     data = {
-        "prompts": [prompt.to_dict() for pro in prompts],
-        "responses": [response.to_dict() for res in responses]
+        "prompts": [prompt.to_dict() for prompt in prompts],
+        "responses": [response.to_dict() for response in responses]
     }
 
     with open("data.json", "w", encoding="utf-8") as file:
@@ -162,6 +184,12 @@ def load_data():
         }
 
     return data
+
+class MockProvider:
+    def generate(self , prompt_text):
+        return mock_response(prompt_text)
+        
+
 
 
 def main():
