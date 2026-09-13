@@ -1,11 +1,12 @@
 import json
 
 
-prompts = []
-responses = []
+prompts = [] # The list of all the prompts which is in dict 
+# ---------------But but but now this is storing object after the little change 
+responses = [] # the list of respnses which is also in dict 
 
 
-def mock_response(prompt_text):
+def mock_response(prompt_text): # we just created this until have a real API 
     return f"Mock answer for: {prompt_text}"
 
 
@@ -18,12 +19,10 @@ def add_prompt():
         print("Prompt cannot be empty.")
         return
 
-    prompt = {
-        "id": len(prompts) + 1,
-        "text": prompt_text
-    }
+    # Calling class Prompt to add the prompt , we created the object name as "prompt" calling the class Prompt
+    prompt = Prompt(prompt_id=len(prompts) + 1, text=prompt_text)
 
-    prompts.append(prompt)
+    prompts.append(prompt) # also append that object to the list of objects "prompt"
 
     print("Prompt added.")
 
@@ -32,14 +31,15 @@ def view_prompts():
     if not prompts:
         print("No prompts yet.")
         return
+    
 
     for prompt in prompts:
-        print(f"{prompt['id']}. {prompt['text']}")
+        print(f"{prompt.id}. {prompt.text}")
 
 
 def find_prompt_by_id(prompt_id):
     for prompt in prompts:
-        if prompt["id"] == prompt_id:
+        if prompt.id == prompt_id:
             return prompt
 
     return None
@@ -58,11 +58,11 @@ def run_prompt():
         print("Prompt not found.")
         return
 
-    response_text = mock_response(prompt["text"])
+    response_text = mock_response(prompt.text)
 
     response = {
         "id": len(responses) + 1,
-        "prompt_id": prompt["id"],
+        "prompt_id": prompt.id,
         "response": response_text
     }
 
@@ -83,8 +83,8 @@ def view_history():
         if prompt is not None:
             print(
                 f"\nRun ID: {response['id']}"
-                f"\nPrompt ID: {prompt['id']}"
-                f"\nPrompt: {prompt['text']}"
+                f"\nPrompt ID: {prompt.id}"
+                f"\nPrompt: {prompt.text}"
                 f"\nResponse: {response['response']}"
             )
 
@@ -100,6 +100,16 @@ class RunResult:
             "response" : self.response,
             "id" : self.run_id
         }
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            prompt_id = data["prompt_id"],
+            run_id = data["id"],
+            response = data["response"]
+        )
+    
+
+    
 
 class Prompt:
     def __init__(self, prompt_id , text):
@@ -111,6 +121,12 @@ class Prompt:
             "id": self.id,
             "text" : self.text
         }
+    @classmethod
+    def from_dict(cls , data):
+        return cls(
+            prompt_id = data["id"],
+            text = data["text"]
+        )
 
         
 
@@ -119,7 +135,7 @@ def delete_prompt():
 
 def save_data():
     data = {
-        "prompts": prompts,
+        "prompts": [prompt.to_dict() for prompt in prompts],
         "responses": responses
     }
 
@@ -155,7 +171,7 @@ def main():
 
     data = load_data()
 
-    prompts = data["prompts"]
+    prompts = [Prompt.from_dict(item) for item in data["prompts"] ]
     responses = data["responses"]
 
     while True:
