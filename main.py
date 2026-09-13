@@ -32,7 +32,8 @@ def view_prompts():
         print("No prompts yet.")
         return
     
-
+    # viewering prompt from prompts list we have created containg objects 
+    # finding each object 
     for prompt in prompts:
         print(f"{prompt.id}. {prompt.text}")
 
@@ -60,11 +61,12 @@ def run_prompt():
 
     response_text = mock_response(prompt.text)
 
-    response = {
-        "id": len(responses) + 1,
-        "prompt_id": prompt.id,
-        "response": response_text
-    }
+    # Calling the RunResult class and createing the object response
+    response = RunResult( 
+        prompt_id  = prompt.id , 
+        run_id = len(responses) + 1 , 
+        response = response_text
+    )
 
     responses.append(response)
 
@@ -78,14 +80,14 @@ def view_history():
         return
 
     for response in responses:
-        prompt = find_prompt_by_id(response["prompt_id"])
+        prompt = find_prompt_by_id(response.prompt_id)
 
         if prompt is not None:
             print(
-                f"\nRun ID: {response['id']}"
+                f"\nRun ID: {response.run_id}"
                 f"\nPrompt ID: {prompt.id}"
                 f"\nPrompt: {prompt.text}"
-                f"\nResponse: {response['response']}"
+                f"\nResponse: {response.response_text}"
             )
 
 class RunResult:
@@ -108,9 +110,6 @@ class RunResult:
             response = data["response"]
         )
     
-
-    
-
 class Prompt:
     def __init__(self, prompt_id , text):
         self.id = prompt_id
@@ -135,8 +134,8 @@ def delete_prompt():
 
 def save_data():
     data = {
-        "prompts": [prompt.to_dict() for prompt in prompts],
-        "responses": responses
+        "prompts": [prompt.to_dict() for pro in prompts],
+        "responses": [response.to_dict() for res in responses]
     }
 
     with open("data.json", "w", encoding="utf-8") as file:
@@ -172,7 +171,7 @@ def main():
     data = load_data()
 
     prompts = [Prompt.from_dict(item) for item in data["prompts"] ]
-    responses = data["responses"]
+    responses = [RunResult.from_dict(item) for item in data["responses"]]
 
     while True:
         print("\nAI Prompt Lab")
