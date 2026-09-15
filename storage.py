@@ -53,43 +53,44 @@ def load_data():
     if not isinstance(data["responses"] , list ):
         raise ValueError("reposnses must be list")
 
-    for items in data["prompts"]:
-        if not isinstance(items , dict):
-            raise ValueError("each saved prompt must be in dict .")
+    for item in data["prompts"]:
+        if not isinstance(item, dict):
+            raise ValueError("Each saved prompt must be a dictionary.")
 
-        if "text" not in prompts[items] or "id" not in prompts[items]:
-            raise ValueError("Id or Text is not available in prompts")
+        if "id" not in item or "text" not in item:
+            raise ValueError("Prompt must contain id and text.")
 
         if type(item["id"]) is not int:
-            raise ValueError("Prompt id muse be an integer.")
+            raise ValueError("Prompt id must be an integer.")
 
-        if items["id"] <= 0:
-            raise ValueError("Id should be postive")
+        if item["id"] <= 0:
+            raise ValueError("Prompt id must be positive.")
 
-        if not isinstance( items["Text"] , str ):
-            raise ValueError("Text should be in string")
+        if not isinstance(item["text"], str):
+            raise ValueError("Prompt text must be a string.")
 
         if not item["text"].strip():
-            raise ValueError("Prompt text cannot be empty ")
+            raise ValueError("Prompt text cannot be empty.")
 
-    for items in data["responses"]:
-        if not isinstance(items , dict):
-            raise ValueError("responses should be dictionary")
+    for item in data["responses"]:
+        if not isinstance(item, dict):
+            raise ValueError("Each response must be a dictionary.")
 
-        
+        if ("id" not in item or "prompt_id" not in item or "response" not in item):
+            raise ValueError("Response must contain id, prompt_id and response.")
 
-        if "id" not in responses[items] or "prompt_id" not in responses[items] or "response" not in responses[items]:
-            raise ValueError("Id or prompt_id or response is missing")
+        if type(item["id"]) is not int:
+            raise ValueError("Response id must be an integer.")
 
-        if items["id"] <= 0 or items["prompt_id"] <= 0 :
-            raise ValueError("Prompt_id or Response_id is incorrect ")
+        if type(item["prompt_id"]) is not int:
+            raise ValueError("Prompt id must be an integer.")
 
-        if type(items["responses"]) is not str:
-            raise ValueError("response should be string")
+        if item["id"] <= 0 or item["prompt_id"] <= 0:
+            raise ValueError("Response id and prompt id must be positive.")
 
-
-        
-
+        if not isinstance(item["response"], str):
+            raise ValueError("Response must be a string.")
 
     return data
+    
 
