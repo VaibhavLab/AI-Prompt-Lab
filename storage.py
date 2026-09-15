@@ -19,11 +19,13 @@ def save_data(prompts , responses):
         "prompts": [prompt.to_dict() for prompt in prompts],
         "responses": [response.to_dict() for response in responses]
     }
+    temp_file = DATA_FILE.with_suffix(".tmp")
+
 
     with open(DATA_FILE, "w", encoding="utf-8") as file:
         json.dump(data, file, indent=4)
 
-
+    temp_file.replace("DATA_FILE")
 
 def load_data():
     try:
@@ -92,5 +94,5 @@ def load_data():
             raise ValueError("Response must be a string.")
 
     return data
-    
+
 
