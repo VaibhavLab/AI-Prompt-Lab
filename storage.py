@@ -57,20 +57,38 @@ def load_data():
         if not isinstance(items , dict):
             raise ValueError("each saved prompt must be in dict .")
 
-        if "text" not in items or "id" not in items:
+        if "text" not in prompts[items] or "id" not in prompts[items]:
             raise ValueError("Id or Text is not available in prompts")
 
-        if type(items["id"]) is not int:
+        if type(item["id"]) is not int:
             raise ValueError("Prompt id muse be an integer.")
 
         if items["id"] <= 0:
             raise ValueError("Id should be postive")
 
-        if not isinstance( items["text"] , str ):
+        if not isinstance( items["Text"] , str ):
             raise ValueError("Text should be in string")
 
-        if not items["text"].strip():
+        if not item["text"].strip():
             raise ValueError("Prompt text cannot be empty ")
+
+    for items in data["responses"]:
+        if not isinstance(items , dict):
+            raise ValueError("responses should be dictionary")
+
+        
+
+        if "id" not in responses[items] or "prompt_id" not in responses[items] or "response" not in responses[items]:
+            raise ValueError("Id or prompt_id or response is missing")
+
+        if items["id"] <= 0 or items["prompt_id"] <= 0 :
+            raise ValueError("Prompt_id or Response_id is incorrect ")
+
+        if type(items["responses"]) is not str:
+            raise ValueError("response should be string")
+
+
+        
 
 
     return data
