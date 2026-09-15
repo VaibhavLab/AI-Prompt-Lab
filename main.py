@@ -2,7 +2,7 @@ import json
 from models import Prompt, RunResult 
 from Providers import BaseProvider , MockProvider , UppercaseMockProvider
 from runner import PromptRunner
-
+from storage import load_data , save_data
 
 prompts = [] # The list of all the prompts which is in dict 
 # ---------------But but but now this is storing object after the little change 
@@ -84,36 +84,7 @@ def view_history():
             )
 
 
-def save_data():
-    data = {
-        "prompts": [prompt.to_dict() for prompt in prompts],
-        "responses": [response.to_dict() for response in responses]
-    }
 
-    with open("data.json", "w", encoding="utf-8") as file:
-        json.dump(data, file, indent=4)
-
-
-def load_data():
-    try:
-        with open("data.json", "r", encoding="utf-8") as file:
-            data = json.load(file)
-
-    except FileNotFoundError:
-        return {
-            "prompts": [],
-            "responses": []
-        }
-
-    except json.JSONDecodeError:
-        print("data.json is damaged or contains invalid JSON.")
-
-        return {
-            "prompts": [],
-            "responses": []
-        }
-
-    return data
 
 
 def main():
@@ -139,20 +110,20 @@ def main():
 
         if choice == "1":
             add_prompt()
-            save_data()
+            save_data(prompts, responses)
 
         elif choice == "2":
             view_prompts()
 
         elif choice == "3":
             run_prompt(runner)
-            save_data()
+            save_data(prompts, responses)
 
         elif choice == "4":
             view_history()
 
         elif choice == "5":
-            save_data()
+            save_data(prompts, responses)
             print("Goodbye!")
             break
 
