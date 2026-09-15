@@ -91,7 +91,12 @@ def main():
     global prompts
     global responses
 
-    data = load_data()
+    try:
+        data = load_data()
+    except ValueError as e:
+        print(e)
+        return
+
     provider = UppercaseMockProvider()  
     runner = PromptRunner(provider)
 

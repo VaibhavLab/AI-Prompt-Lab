@@ -13,6 +13,7 @@ This builds the location of data.json beside storage.py:
 Then change the file-opening lines in both functions.
 """
 
+
 def save_data(prompts , responses):
     data = {
         "prompts": [prompt.to_dict() for prompt in prompts],
@@ -21,6 +22,7 @@ def save_data(prompts , responses):
 
     with open(DATA_FILE, "w", encoding="utf-8") as file:
         json.dump(data, file, indent=4)
+
 
 
 def load_data():
@@ -34,12 +36,42 @@ def load_data():
             "responses": []
         }
 
-    except json.JSONDecodeError:
-        print("data.json is damaged or contains invalid JSON.")
+    except json.JSONDecodeError as e:
+        raise ValueError(
+            "data.json contains invalid JSON. Loading stopped . "
+        )from e
+    
+    if not isinstance(data , dict):
+        raise ValueError("Saved data must be in dictionary")
 
-        return {
-            "prompts": [],
-            "responses": []
-        }
+    if "prompts" not in data or "responses" not in data:
+        raise ValueError("Saved data must contain prompts and responses.")
+
+    if not isinstance(data["prompts"] , list):
+        raise ValueError("prompts must be list")
+
+    if not isinstance(data["responses"] , list ):
+        raise ValueError("reposnses must be list")
+
+    for items in data["prompts"]:
+        if not isinstance(items , dict):
+            raise ValueError("each saved prompt must be in dict .")
+
+        if "text" not in items or "id" not in items:
+            raise ValueError("Id or Text is not available in prompts")
+
+        if type(items["id"]) is not int:
+            raise ValueError("Prompt id muse be an integer.")
+
+        if items["id"] <= 0:
+            raise ValueError("Id should be postive")
+
+        if not isinstance( items["text"] , str ):
+            raise ValueError("Text should be in string")
+
+        if not items["text"].strip():
+            raise ValueError("Prompt text cannot be empty ")
+
 
     return data
+
