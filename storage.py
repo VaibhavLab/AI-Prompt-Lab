@@ -2,6 +2,8 @@ import json
 from models import RunResult , Prompt
 from pathlib import Path
 
+logger = logging.getLogger(__name__)
+
 DATA_FILE = Path(__file__).resolve().parent/"data.json"
 
 """

@@ -3,6 +3,14 @@ from models import Prompt, RunResult
 from Providers import BaseProvider , MockProvider , UppercaseMockProvider , GeminiProvider
 from runner import PromptRunner
 from storage import load_data , save_data
+import logging 
+
+logging.basicConfig(
+    level = logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
+logger = logging.getLogger(__name__)
+logger.info("Model loaded")
 
 prompts = [] # The list of all the prompts which is in dict 
 # ---------------But but but now this is storing object after the little change 
