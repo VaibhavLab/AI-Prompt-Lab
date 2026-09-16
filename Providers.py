@@ -28,7 +28,7 @@ class GeminiProvider(BaseProvider):
         self.api_key = os.getenv("GEMINI_API_KEY")
 
         if not self.api_key:
-            logger.error("Gemini failed to respond")
+            logger.error("Gemini API key is missing")
             raise ValueError("Gemini API is not available")
 
 
@@ -54,11 +54,28 @@ class GeminiProvider(BaseProvider):
                 }
             ]
         }
+        try:
+            response = requests.post( url , headers = headers , json = payload , timeout = 30 )
 
-        response = requests.post( url , headers = headers , json = payload , timeout = 30 )
+            response.raise_for_status()
+            data = response.json()
 
-        response.raise_for_status()
-        data = response.json()
+        except requests.exceptions.Timeout:
+            logger.error("Gemini request timed out")
+            raise
+
+        except requests.exceptions.ConnectionError:
+            logger.error("Could not connect to Gemini API")
+            raise
+
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"Gemini API returned an HTTP error: {e}")
+            raise
+
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Gemini request failed: {e}")
+            raise
+
 
         return data["candidates"][0]["content"]["parts"][0]["text"]
         
