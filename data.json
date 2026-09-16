@@ -1,0 +1,15 @@
+{
+    "prompts": [
+        {
+            "id": 1,
+            "text": "WHo is the CEO of google ?"
+        }
+    ],
+    "responses": [
+        {
+            "prompt_id": 1,
+            "response": "The CEO of Google is **Sundar Pichai**. He has served as Google's CEO since 2015 and also became the CEO of its parent company, Alphabet Inc., in 2019.",
+            "id": 1
+        }
+    ]
+}

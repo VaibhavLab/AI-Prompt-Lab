@@ -1,6 +1,6 @@
 import json
 from models import Prompt, RunResult 
-from Providers import BaseProvider , MockProvider , UppercaseMockProvider
+from Providers import BaseProvider , MockProvider , UppercaseMockProvider , GeminiProvider
 from runner import PromptRunner
 from storage import load_data , save_data
 
@@ -97,7 +97,7 @@ def main():
         print(e)
         return
 
-    provider = UppercaseMockProvider()  
+    provider = GeminiProvider()  
     runner = PromptRunner(provider)
 
     prompts = [Prompt.from_dict(item) for item in data["prompts"] ]

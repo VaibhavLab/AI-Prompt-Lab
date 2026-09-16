@@ -67,3 +67,13 @@ payload  = what's inside the parcel
 timeout  = how long you're willing to wait for delivery
 response = what comes back
 """
+""" Must remember 
+URL
+headers
+payload/body
+POST request
+timeout
+check status
+parse JSON
+extract result
+"""
