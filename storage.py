@@ -1,6 +1,7 @@
 import json
 from models import RunResult , Prompt
 from pathlib import Path
+import logging 
 
 logger = logging.getLogger(__name__)
 

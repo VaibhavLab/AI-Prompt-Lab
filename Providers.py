@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 import os
 import requests 
+import logging 
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class GeminiProvider(BaseProvider):
         self.api_key = os.getenv("GEMINI_API_KEY")
 
         if not self.api_key:
-            logger.error("Prompt validation failed")
+            logger.error("Gemini failed to respond")
             raise ValueError("Gemini API is not available")
 
 
