@@ -1,4 +1,8 @@
 from abc import ABC, abstractmethod
+from dotenv import load_dotenv
+import os
+import requests 
+
 
 class BaseProvider(ABC): # TypeError : generate is abstract
     @abstractmethod
@@ -14,3 +18,52 @@ class MockProvider(BaseProvider):
 class UppercaseMockProvider(BaseProvider):
     def generate(self , prompt_text):
         return f"Mock answer : {prompt_text.upper()}"   
+
+
+class GeminiProvider(BaseProvider):
+    def __init__(self):
+        load_dotenv()
+        self.api_key = os.getenv("GEMINI_API_KEY")
+
+        if not self.api_key:
+            raise ValueError("Gemini API is not available")
+
+
+    def generate(self , prompt_text):
+        url = (
+            "https://generativelanguage.googleapis.com/"
+            "v1beta/models/gemini-3.8-flash:generateContent"
+        )
+
+        headers = {
+            "x-goog-api-key": self.api_key,
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": prompt_text
+                        }
+                    ]
+                }
+            ]
+        }
+
+        response = requests.post( url , headers = headers , json = payload , timeout = 30 )
+
+        response.raise_for_status()
+        data = response.json()
+
+        return data["candidates"][0]["content"]["parts"][0]["text"]
+        
+        
+"""
+URL      = delivery address
+headers  = labels/instructions on the parcel
+payload  = what's inside the parcel
+timeout  = how long you're willing to wait for delivery
+response = what comes back
+"""
