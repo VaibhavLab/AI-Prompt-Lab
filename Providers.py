@@ -78,7 +78,71 @@ class GeminiProvider(BaseProvider):
 
 
         return data["candidates"][0]["content"]["parts"][0]["text"]
-        
+
+
+class OpenRouter(BaseProvider):
+    def __init__(self):
+        load_dotenv()
+        self.api_key = os.getenv("OPENROUTER_API_KEY")
+
+        if not self.api_key:
+            logger.error("OPENROUTER API key is missing")
+            raise ValueError("OPENROUTER API is not available")
+
+        def generate(prompt_text):
+
+            url = "https://openrouter.ai/api/v1/chat/completions"
+
+            headers = {
+                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                "Content-Type": "application/json",
+            }
+
+            payload = {
+                "model": "openrouter/free",
+
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": prompt_text
+                    }
+                ]
+            }
+
+            try:
+
+                response = requests.post(
+                    url,
+                    headers=headers,
+                    json=payload,
+                    timeout=30
+                )
+
+                response.raise_for_status()
+
+                data = response.json()
+
+            except requests.exceptions.Timeout:
+                logger.error("OpenRouter request timed out")
+                raise
+
+            except requests.exceptions.ConnectionError:
+                logger.error("Could not connect to OpenRouter API")
+                raise
+
+            except requests.exceptions.HTTPError as e:
+                logger.error(f"OpenRouter API returned an HTTP error: {e}")
+                raise
+
+            except requests.exceptions.RequestException as e:
+                logger.error(f"OpenRouter request failed: {e}")
+                raise
+
+
+            return data["choices"][0]["message"]["content"]
+
+
+
         
 """
 URL      = delivery address

@@ -3,6 +3,22 @@
         {
             "id": 1,
             "text": "WHo is the CEO of google ?"
+        },
+        {
+            "id": 2,
+            "text": "what is the most famouse quote to be a  successful person ?"
+        },
+        {
+            "id": 3,
+            "text": "where to get a lot of money ?"
+        },
+        {
+            "id": 4,
+            "text": "hot to check the condition of code ?"
+        },
+        {
+            "id": 5,
+            "text": "Tell me the name of most famous person ?"
         }
     ],
     "responses": [

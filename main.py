@@ -1,6 +1,6 @@
 import json
 from models import Prompt, RunResult 
-from Providers import BaseProvider , MockProvider , UppercaseMockProvider , GeminiProvider
+from Providers import BaseProvider , MockProvider , UppercaseMockProvider , GeminiProvider , OpenRouter
 from runner import PromptRunner
 from storage import load_data , save_data
 import logging 
@@ -91,10 +91,6 @@ def view_history():
                 f"\nResponse: {response.response}"
             )
 
-
-
-
-
 def main():
     global prompts
     global responses
@@ -105,7 +101,7 @@ def main():
         print(e)
         return
 
-    provider = GeminiProvider()  
+    provider = OpenRouter()  
     runner = PromptRunner(provider)
 
     prompts = [Prompt.from_dict(item) for item in data["prompts"] ]
