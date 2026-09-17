@@ -5,6 +5,8 @@ from runner import PromptRunner
 from storage import load_data , save_data
 import logging 
 import requests
+import asyncio
+
 
 logging.basicConfig(
     level = logging.INFO,
@@ -55,7 +57,7 @@ def find_prompt_by_id(prompt_id):
     return None
 
 
-def run_prompt(runner):
+async def run_prompt(runner):
     try:
         prompt_id = int(input("Enter prompt ID: ").strip())
     except ValueError:
@@ -97,7 +99,7 @@ def view_history():
                 f"\nResponse: {response.response}"
             )
 
-def main():
+async def main():
     global prompts
     global responses
 
@@ -119,7 +121,8 @@ def main():
         print("2. View prompts")
         print("3. Run prompt")
         print("4. View response history")
-        print("5. Exit")
+        print("5. Run all prompts")
+        print("6. Exit")
 
         choice = input("Choose an option: ").strip()
 
@@ -142,6 +145,11 @@ def main():
             save_data(prompts, responses)
             print("Goodbye!")
             break
+
+        elif choice == "6":
+            await asyncio.run_prompt(runner)
+            
+
 
         else:
             print("Invalid choice. Enter 1, 2, 3, 4 or 5.")
