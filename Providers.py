@@ -48,7 +48,7 @@ class GeminiProvider(BaseProvider):
                 {
                     "parts": [
                         {
-                            "text": prompt_text
+                            "text": f"Answer in one concise line.\nUser prompt: {prompt_text}"
                         }
                     ]
                 }
@@ -93,7 +93,8 @@ class OpenRouter(BaseProvider):
         url = "https://openrouter.ai/api/v1/chat/completions"
 
         headers = {
-            "Authorization": self.api_key,
+            
+            "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         }
 
@@ -103,7 +104,7 @@ class OpenRouter(BaseProvider):
             "messages": [
                 {
                     "role": "user",
-                    "content": prompt_text
+                    "content": f"Answer in one concise line.\nUser prompt: {prompt_text}"
                 }
             ]
         }
