@@ -1,40 +1,33 @@
-import json
-from models import Prompt, RunResult 
-from Providers import BaseProvider , MockProvider , UppercaseMockProvider , GeminiProvider , OpenRouter
+from models import Prompt, RunResult
+from Providers import OpenRouter
 from runner import PromptRunner
-from storage import load_data , save_data
-import logging 
+from storage import load_data, save_data
+import logging
 import requests
 import asyncio
 
 
 logging.basicConfig(
-    level = logging.INFO,
+    level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 )
 logger = logging.getLogger(__name__)
-logger.info("Model loaded")
+logger.info("Application started")
 
-prompts = [] # The list of all the prompts which is in dict 
-# ---------------But but but now this is storing object after the little change 
-responses = [] # the list of respnses which is also in dict 
+prompts = []
+responses = []
 
 
 def add_prompt():
-    # obhject of the class prompt 
-    
     prompt_text = input("Enter your prompt: ").strip()
 
     try:
-        # Calling class Prompt to add the prompt , we created the object name as "prompt" calling the class Prompt
         prompt = Prompt(prompt_id=len(prompts) + 1, text=prompt_text)
-        
     except ValueError as e:
         print(e)
         return
 
-    prompts.append(prompt) # also append that object to the list of objects "prompt"
-
+    prompts.append(prompt)
     print("Prompt added.")
 
 
@@ -42,9 +35,7 @@ def view_prompts():
     if not prompts:
         print("No prompts yet.")
         return
-    
-    # viewering prompt from prompts list we have created containg objects 
-    # finding each object 
+
     for prompt in prompts:
         print(f"{prompt.id}. {prompt.text} ({prompt.word_count} words)")
 
@@ -57,7 +48,8 @@ def find_prompt_by_id(prompt_id):
     return None
 
 
-async def run_prompt(runner):
+def run_prompt(runner):
+    """Run one prompt normally (synchronously)."""
     try:
         prompt_id = int(input("Enter prompt ID: ").strip())
     except ValueError:
@@ -73,14 +65,54 @@ async def run_prompt(runner):
     try:
         response = runner.run(prompt, run_id=len(responses) + 1)
     except requests.exceptions.RequestException:
-        logger.error("request timeout")
+        logger.error("AI provider request failed")
+        print("The AI request failed.")
         return
-
 
     responses.append(response)
 
     print("Response:")
     print(response.response)
+
+
+async def run_all_prompts(runner):
+    """Run all saved prompts concurrently using the existing synchronous runner."""
+    if not prompts:
+        print("No prompts to run.")
+        return
+
+    tasks = []
+    starting_run_id = len(responses) + 1
+
+    for index, prompt in enumerate(prompts):
+        # runner.run() is synchronous because the providers use requests.
+        # asyncio.to_thread() moves that blocking work to a worker thread so
+        # several prompt requests can be in progress at the same time.
+        task = asyncio.to_thread(
+            runner.run,
+            prompt,
+            starting_run_id + index
+        )
+        tasks.append(task)
+
+    try:
+        # gather() waits for all of the created async tasks together.
+        results = await asyncio.gather(*tasks)
+    except requests.exceptions.RequestException:
+        logger.error("One or more AI provider requests failed")
+        print("One or more AI requests failed.")
+        return
+
+    responses.extend(results)
+
+    print("\nAll prompts completed:")
+    for result in results:
+        prompt = find_prompt_by_id(result.prompt_id)
+        print(
+            f"\nPrompt ID: {result.prompt_id}"
+            f"\nPrompt: {prompt.text if prompt else 'Unknown prompt'}"
+            f"\nResponse: {result.response}"
+        )
 
 
 def view_history():
@@ -99,6 +131,7 @@ def view_history():
                 f"\nResponse: {response.response}"
             )
 
+
 async def main():
     global prompts
     global responses
@@ -109,10 +142,10 @@ async def main():
         print(e)
         return
 
-    provider = OpenRouter()  
+    provider = OpenRouter()
     runner = PromptRunner(provider)
 
-    prompts = [Prompt.from_dict(item) for item in data["prompts"] ]
+    prompts = [Prompt.from_dict(item) for item in data["prompts"]]
     responses = [RunResult.from_dict(item) for item in data["responses"]]
 
     while True:
@@ -134,7 +167,7 @@ async def main():
             view_prompts()
 
         elif choice == "3":
-            
+            # One prompt does not need concurrency, so this stays synchronous.
             run_prompt(runner)
             save_data(prompts, responses)
 
@@ -142,17 +175,19 @@ async def main():
             view_history()
 
         elif choice == "5":
+            # This is async, so it must be awaited from inside async main().
+            await run_all_prompts(runner)
+            save_data(prompts, responses)
+
+        elif choice == "6":
             save_data(prompts, responses)
             print("Goodbye!")
             break
 
-        elif choice == "6":
-            await asyncio.run_prompt(runner)
-            
-
-
         else:
-            print("Invalid choice. Enter 1, 2, 3, 4 or 5.")
+            print("Invalid choice. Enter 1, 2, 3, 4, 5 or 6.")
+
 
 if __name__ == "__main__":
-    main()
+    # asyncio.run() creates the event loop and starts our async main function.
+    asyncio.run(main())
