@@ -89,7 +89,7 @@ class OpenRouter(BaseProvider):
             logger.error("OPENROUTER API key is missing")
             raise ValueError("OPENROUTER API is not available")
 
-    def generate(prompt_text):
+    def generate(self , prompt_text):
         url = "https://openrouter.ai/api/v1/chat/completions"
 
         headers = {
