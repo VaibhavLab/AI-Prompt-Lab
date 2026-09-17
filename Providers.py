@@ -93,7 +93,7 @@ class OpenRouter(BaseProvider):
         url = "https://openrouter.ai/api/v1/chat/completions"
 
         headers = {
-            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+            "Authorization": self.api_key,
             "Content-Type": "application/json",
         }
 
