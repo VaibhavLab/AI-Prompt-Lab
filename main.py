@@ -98,19 +98,6 @@ def view_history():
                 f"\nResponse: {response.response}"
             )
 
-def Time_Taken(wrapper):
-    time.perf_counter()
-
-    start = time.perf_counter()
-
-    wrapper()
-
-    end = time.perf_counter()
-
-    elapsed = end - start
-    print(elapsed)
-
-
 def main():
     global prompts
     global responses
@@ -145,7 +132,7 @@ def main():
             view_prompts()
 
         elif choice == "3":
-            @Time_Taken
+            
             run_prompt(runner)
             save_data(prompts, responses)
 
