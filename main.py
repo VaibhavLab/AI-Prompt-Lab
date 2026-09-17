@@ -4,8 +4,7 @@ from Providers import BaseProvider , MockProvider , UppercaseMockProvider , Gemi
 from runner import PromptRunner
 from storage import load_data , save_data
 import logging 
-import time
-
+import requests
 
 logging.basicConfig(
     level = logging.INFO,
