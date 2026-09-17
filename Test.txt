@@ -1,3 +1,8 @@
 apple
 mango
 banana
+
+
+raise means: “I cannot handle this error here; send it upward.”
+
+return means: “stop this function here and go back normally.”

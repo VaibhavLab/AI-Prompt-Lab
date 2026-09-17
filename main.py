@@ -4,6 +4,8 @@ from Providers import BaseProvider , MockProvider , UppercaseMockProvider , Gemi
 from runner import PromptRunner
 from storage import load_data , save_data
 import logging 
+import time
+
 
 logging.basicConfig(
     level = logging.INFO,
@@ -67,7 +69,12 @@ def run_prompt(runner):
         print("Prompt not found.")
         return
 
-    response = runner.run(prompt, run_id=len(responses) + 1)
+    try:
+        response = runner.run(prompt, run_id=len(responses) + 1)
+    except requests.exceptions.RequestException:
+        logger.error("request timeout")
+        return
+
 
     responses.append(response)
 
@@ -90,6 +97,19 @@ def view_history():
                 f"\nPrompt: {prompt.text}"
                 f"\nResponse: {response.response}"
             )
+
+def Time_Taken(wrapper):
+    time.perf_counter()
+
+    start = time.perf_counter()
+
+    wrapper()
+
+    end = time.perf_counter()
+
+    elapsed = end - start
+    print(elapsed)
+
 
 def main():
     global prompts
@@ -125,6 +145,7 @@ def main():
             view_prompts()
 
         elif choice == "3":
+            @Time_Taken
             run_prompt(runner)
             save_data(prompts, responses)
 

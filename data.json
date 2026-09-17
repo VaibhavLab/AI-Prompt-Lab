@@ -34,6 +34,11 @@
             "prompt_id": 7,
             "response": "\n\nBe genuine, show consistent interest, and be kind and respectful.",
             "id": 5
+        },
+        {
+            "prompt_id": 2,
+            "response": "\u201cSuccess is not final, failure is not fatal: it is the courage to continue that counts.\u201d \u2014 Winston Churchill",
+            "id": 2
         }
     ]
 }
