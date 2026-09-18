@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Prompt Lab — a clean static showcase for the Python project." />
+  <title>AI Prompt Lab</title>
+
+  <!--
+    Frontend note:
+    This frontend was created with AI assistance.
+    The Python project logic and backend code in this repository were written by Vaibhav.
+  -->
+
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --text: #171a21;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #111827;
+      --soft: #f1f3f7;
+      --success: #0f766e;
+      --radius: 18px;
+      --shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(15, 23, 42, 0.05), transparent 34%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 52px 0 40px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .intro {
+      padding: 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: #374151;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(38px, 6vw, 66px);
+      letter-spacing: -0.055em;
+      line-height: 0.98;
+    }
+
+    .lead {
+      margin: 0;
+      max-width: 650px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .stack {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .stack h2,
+    .workspace h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .chip {
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .status {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .workspace {
+      padding: 28px;
+    }
+
+    .workspace-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #ecfdf5;
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 13px;
+      padding: 14px 15px;
+      color: var(--text);
+      font: inherit;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input:focus {
+      border-color: #9ca3af;
+      box-shadow: 0 0 0 4px rgba(17, 24, 39, 0.05);
+    }
+
+    button {
+      border: 0;
+      border-radius: 13px;
+      padding: 13px 16px;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .secondary {
+      background: var(--soft);
+      color: var(--text);
+    }
+
+    .prompt-list {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .prompt-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .prompt-id {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: var(--soft);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .prompt-text {
+      min-width: 0;
+    }
+
+    .prompt-text strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .prompt-text span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .response {
+      margin-top: 18px;
+      padding: 16px;
+      min-height: 82px;
+      border-radius: 14px;
+      background: #111827;
+      color: #f9fafb;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .note {
+      margin-top: 24px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .note strong {
+      color: var(--text);
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        padding-top: 24px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .intro,
+      .stack,
+      .workspace {
+        padding: 22px;
+      }
+
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+
+      .prompt-item {
+        grid-template-columns: auto 1fr;
+      }
+
+      .prompt-item button {
+        grid-column: 1 / -1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="card intro">
+        <div class="eyebrow">Python Revision Project · AI Engineering</div>
+        <h1>AI Prompt Lab</h1>
+        <p class="lead">
+          A compact Python project for practising prompt storage, OOP, provider abstraction,
+          API calls, logging, testing, and async concurrency.
+        </p>
+      </div>
+
+      <aside class="card stack">
+        <div>
+          <h2>What this project practises</h2>
+          <div class="chips">
+            <span class="chip">Python</span>
+            <span class="chip">OOP</span>
+            <span class="chip">JSON</span>
+            <span class="chip">HTTP APIs</span>
+            <span class="chip">Logging</span>
+            <span class="chip">Asyncio</span>
+            <span class="chip">Pytest</span>
+          </div>
+        </div>
+        <div class="status">
+          <span>Static GitHub Pages demo</span>
+          <span>Backend: Python</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="card workspace">
+      <div class="workspace-head">
+        <h2>Prompt Playground</h2>
+        <span class="badge">Demo UI</span>
+      </div>
+
+      <div class="input-row">
+        <input id="promptInput" type="text" placeholder="Enter a prompt..." autocomplete="off" />
+        <button class="primary" id="addButton">Add prompt</button>
+      </div>
+
+      <div class="prompt-list" id="promptList"></div>
+
+      <div class="actions">
+        <button class="primary" id="runAllButton">Run all prompts</button>
+        <button class="secondary" id="clearButton">Clear</button>
+      </div>
+
+      <div class="response" id="responseBox">Ready. Add a prompt to try the static demo.</div>
+    </section>
+
+    <p class="note">
+      <strong>Frontend created with AI assistance.</strong>
+      The Python project logic and backend code in this repository were written by Vaibhav.
+      This page is a frontend showcase only and does not expose API keys or run the Python backend in GitHub Pages.
+    </p>
+  </main>
+
+  <script>
+    const prompts = [
+      "Explain Python decorators in one line.",
+      "What is asyncio used for?"
+    ];
+
+    const promptInput = document.getElementById("promptInput");
+    const promptList = document.getElementById("promptList");
+    const responseBox = document.getElementById("responseBox");
+
+    function renderPrompts() {
+      promptList.innerHTML = "";
+
+      if (prompts.length === 0) {
+        promptList.innerHTML = '<div class="prompt-item"><div class="prompt-text"><strong>No prompts yet</strong><span>Add one above.</span></div></div>';
+        return;
+      }
+
+      prompts.forEach((prompt, index) => {
+        const item = document.createElement("div");
+        item.className = "prompt-item";
+
+        item.innerHTML = `
+          <div class="prompt-id">${index + 1}</div>
+          <div class="prompt-text">
+            <strong>${escapeHtml(prompt)}</strong>
+            <span>${prompt.trim().split(/\s+/).filter(Boolean).length} words</span>
+          </div>
+          <button class="secondary" data-index="${index}">Run</button>
+        `;
+
+        item.querySelector("button").addEventListener("click", () => runPrompt(index));
+        promptList.appendChild(item);
+      });
+    }
+
+    function addPrompt() {
+      const value = promptInput.value.trim();
+
+      if (!value) {
+        responseBox.textContent = "Prompt cannot be empty.";
+        return;
+      }
+
+      prompts.push(value);
+      promptInput.value = "";
+      responseBox.textContent = "Prompt added.";
+      renderPrompts();
+    }
+
+    function runPrompt(index) {
+      const prompt = prompts[index];
+      responseBox.textContent =
+        `Demo response for prompt #${index + 1}:\n"${prompt}"\n\nConnect this UI to a deployed backend later for real model responses.`;
+    }
+
+    async function runAllPrompts() {
+      if (!prompts.length) {
+        responseBox.textContent = "No prompts to run.";
+        return;
+      }
+
+      responseBox.textContent = "Running demo prompts concurrently...";
+
+      const jobs = prompts.map((prompt, index) =>
+        new Promise(resolve => {
+          const delay = 350 + index * 150;
+          setTimeout(() => resolve(`#${index + 1} → Demo response for: ${prompt}`), delay);
+        })
+      );
+
+      const results = await Promise.all(jobs);
+      responseBox.textContent = results.join("\n");
+    }
+
+    function clearPrompts() {
+      prompts.length = 0;
+      responseBox.textContent = "Cleared.";
+      renderPrompts();
+    }
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    document.getElementById("addButton").addEventListener("click", addPrompt);
+    document.getElementById("runAllButton").addEventListener("click", runAllPrompts);
+    document.getElementById("clearButton").addEventListener("click", clearPrompts);
+
+    promptInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") addPrompt();
+    });
+
+    renderPrompts();
+  </script>
+</body>
+</html>
