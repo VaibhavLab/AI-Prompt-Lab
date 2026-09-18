@@ -49,7 +49,10 @@ def find_prompt_by_id(prompt_id):
 
 
 def run_prompt(runner):
+<<<<<<< HEAD
     """Run one prompt normally (synchronously)."""
+=======
+>>>>>>> a9e3fb6 (Chek this)
     try:
         prompt_id = int(input("Enter prompt ID: ").strip())
     except ValueError:
@@ -64,6 +67,7 @@ def run_prompt(runner):
 
     try:
         response = runner.run(prompt, run_id=len(responses) + 1)
+        
     except requests.exceptions.RequestException:
         logger.error("AI provider request failed")
         print("The AI request failed.")
@@ -131,6 +135,48 @@ def view_history():
                 f"\nResponse: {response.response}"
             )
 
+<<<<<<< HEAD
+=======
+async def run_all_prompts(runner):
+    if not prompts:
+        print("No prompts to run.")
+        return
+
+    tasks = []
+
+    starting_run_id = len(responses) + 1
+
+    for index, prompt in enumerate(prompts):
+        task = asyncio.to_thread(
+            runner.run,
+            prompt,
+            starting_run_id + index
+        )
+
+        tasks.append(task)
+
+    try:
+        results = await asyncio.gather(*tasks)
+
+    except requests.exceptions.RequestException:
+        logger.error("One or more provider requests failed")
+        print("One or more AI requests failed.")
+        return
+
+    responses.extend(results)
+
+    print("\nAll prompts completed:")
+
+    for result in results:
+        prompt = find_prompt_by_id(result.prompt_id)
+
+        print(
+            f"\nPrompt ID: {result.prompt_id}"
+            f"\nPrompt: {prompt.text}"
+            f"\nResponse: {result.response}"
+        )
+
+>>>>>>> a9e3fb6 (Chek this)
 
 async def main():
     global prompts
@@ -175,19 +221,31 @@ async def main():
             view_history()
 
         elif choice == "5":
+<<<<<<< HEAD
             # This is async, so it must be awaited from inside async main().
             await run_all_prompts(runner)
             save_data(prompts, responses)
+=======
+            await run_all_prompt(runner)
+>>>>>>> a9e3fb6 (Chek this)
 
         elif choice == "6":
             save_data(prompts, responses)
             print("Goodbye!")
             break
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a9e3fb6 (Chek this)
         else:
             print("Invalid choice. Enter 1, 2, 3, 4, 5 or 6.")
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     # asyncio.run() creates the event loop and starts our async main function.
     asyncio.run(main())
+=======
+    asyncio.run(main())
+>>>>>>> a9e3fb6 (Chek this)
