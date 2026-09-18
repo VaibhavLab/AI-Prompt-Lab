@@ -44,6 +44,41 @@
             "prompt_id": 5,
             "response": "Albert Einstein",
             "id": 3
+        },
+        {
+            "prompt_id": 1,
+            "response": "Sundar Pichai is the CEO of Google (Alphabet Inc.).",
+            "id": 4
+        },
+        {
+            "prompt_id": 2,
+            "response": "\u201cSuccess is not final, failure is not fatal: it is the courage to continue that counts.\u201d \u2014 Winston Churchill",
+            "id": 5
+        },
+        {
+            "prompt_id": 3,
+            "response": "Earn it legally by building a valuable skill, starting a business, investing wisely, or negotiating a higher-paying job.",
+            "id": 6
+        },
+        {
+            "prompt_id": 4,
+            "response": "Test edge cases with input variations and use debuggers or print statements to verify conditional logic paths.",
+            "id": 7
+        },
+        {
+            "prompt_id": 5,
+            "response": "Jesus Christ is widely considered the most famous person in history across global culture and religion.",
+            "id": 8
+        },
+        {
+            "prompt_id": 6,
+            "response": "A hopelessly mismatched romance\u2014one belongs to the water, the other to the sky.",
+            "id": 9
+        },
+        {
+            "prompt_id": 7,
+            "response": "Be genuinely kind, listen more than you talk, make her laugh, and show consistent honesty\u2014connection beats tricks.",
+            "id": 10
         }
     ]
 }

@@ -1,7 +1,4 @@
 from dataclasses import dataclass
-import logging 
-logger = logging.getLogger(__name__)
-
 
 @dataclass # simplty for practise
 class RunResult:
