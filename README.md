@@ -265,3 +265,6 @@ For each small feature:
 When composition, class methods, static methods, properties, dunder methods, or dataclasses appear, explicitly identify the objects involved and how arguments map to parameters.
 
 The aim is to understand and apply Python, not to force every language feature into the application. Concepts without a natural role get a focused exercise instead of unnecessary architecture.
+
+Only the frontend is reamining ,and the remaining things is completed 
+let's see what we have here .
